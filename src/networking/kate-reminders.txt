@@ -1,0 +1,3 @@
+#1. controller = pygame.joystick.Joystick(0) may break if multiple controllers are plugged in or if a joystick instance is created each time controller is disconnected & reconnected
+
+#2. Joystick button indexes are not consistent among controllers in pygame. Only comapatible with XBox One controller
