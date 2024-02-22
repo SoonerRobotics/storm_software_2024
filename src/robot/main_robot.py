@@ -3,25 +3,39 @@
 import threading
 import subprocess
 
-keep_running = True
+stop_threads = False
+
+def stop_robot():
+    stop_threads = True
+    networking_thread.join()
+    serial_thread.join()
+    print("Threads stopped.")
 
 def run_script(script_name):
-    global keep_running
-    while keep_running:
-        subprocess.call(["python", script_name])
+    subprocess.run(["python", script_name])
 
-def stop_all_threads():
-    global keep_running
-    keep_running = False
+def networking_thread_func():
+    global stop_threads
+    while not stop_threads:
+        run_script("networking_robot.py")
+
+def serial_thread_func():
+    global stop_threads
+    while not stop_threads:
+        run_script("serial_robot.py")
 
 if __name__ == "__main__":
-    scripts = ["serial.py", "networking_robot.py"]
+    networking_thread = threading.Thread(target=networking_thread_func)
+    networking_thread.start()
 
-    threads = []
-    for script in scripts:
-        thread = threading.Thread(target=run_script, args=(script,))
-        threads.append(thread)
-        thread.start()
-    
-    for thread in threads:
-        thread.join()
+    serial_thread = threading.Thread(target=serial_thread_func)
+    serial_thread.start()
+
+    input("Press Enter to stop threads...\n")
+
+    stop_threads = True
+
+    networking_thread.join()
+    serial_thread.join()
+
+    print("Threads stopped.")
