@@ -1,9 +1,13 @@
-# Node to 
+# Node to drive robot manually without operator computer #
 
 import pygame
 import serial
 import sys
 import glob
+import struct
+
+LEFT = 0
+RIGHT = 1
 
 def start():
 
@@ -39,12 +43,14 @@ def start():
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
                     left_y = -controller.get_axis(1)
-                    print(left_y)
-                    pico.write(f'L{left_y}\n'.encode())
+                    packet = LEFT.to_bytes(1,'little')
+                    packet = packet + bytearray(struct.pack("<f",left_y))
+                    pico.write(packet)
                 elif event.axis == 3:
                     right_y = -controller.get_axis(3)
-                    print(right_y)
-                    pico.write(f'R{right_y}\n'.encode())
+                    packet = RIGHT.to_bytes(1,'little')
+                    packet = packet + bytearray(struct.pack("<f",right_y))
+                    pico.write(packet)
 
     pygame.quit()
 
