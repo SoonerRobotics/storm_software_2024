@@ -10,30 +10,21 @@ import threading
 import logging
 import queue
 
-UDP_IP = "127.0.0.1"
-VIDEO_PORT = 5005
-COMMAND_PORT = 5006
+UDP_IP = "raspberrypi"
 BUFF_SIZE = 65536
 
 def start():
 
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
-
-    video_sock = socket.socket(socket.AF_INIT, socket.SOCK_DGRAM)
-    video_sock.bind((UDP_IP, VIDEO_PORT))
-    video_thread = threading.Thread(target=video_stream(), args=video_sock)
-    video_thread.start()
-
-    command_sock = socket.socket(socket.AF_INIT, socket.SOCK_DGRAM)
-    command_sock.bind((UDP_IP, VIDEO_PORT))
-    command_queue = queue.Queue()
-    command_thread = threading.Thread(target=command_stream, args=(command_sock,queue))
-    command_thread.start()
-
+    video_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    video_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
+    host_name = socket.gethostname()
+    port = 9999
+    socket_address = (UDP_IP,port)
+    video_sock.bind(socket_address)
+    video_stream(video_sock)
     
 def video_stream(sock):
 
-    logging.debug(f'[Video Stream] Starting')
     cap = cv2.VideoCamera(0)
     fps,st,frames,cnt = (0,0,20,0)
 
@@ -59,16 +50,6 @@ def video_stream(sock):
                 except:
                     pass
             cnt+=1
-
-def command_stream(command_sock, queue):
-    # TODO: Figure out what commands I am accepting
-    logging.debug(f'[Command Stream] Starting')
-
-    while True:
-        data = command_sock.recv(2048)
-        if not data:
-            break
-        queue.put(data)
 
 
 if __name__ == "__main__":
