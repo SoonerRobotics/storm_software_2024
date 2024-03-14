@@ -6,11 +6,9 @@ import cv2
 import imutils
 import base64
 import time
-import threading
-import logging
-import queue
 
 UDP_IP = "raspberrypi"
+UDP_PORT = 9999
 BUFF_SIZE = 65536
 
 def start():
@@ -18,8 +16,7 @@ def start():
     video_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     video_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
     host_name = socket.gethostname()
-    port = 9999
-    socket_address = (UDP_IP,port)
+    socket_address = ('',UDP_PORT)
     video_sock.bind(socket_address)
     video_stream(video_sock)
     
@@ -30,7 +27,7 @@ def video_stream(sock):
 
     while True:
         msg,client_addr = sock.recvfrom(BUFF_SIZE)
-        WIDTH=400
+        WIDTH = 400
         while (cap.isOpened()):
             _,frame = cap.read()
             frame = imutils.resize(frame,width=WIDTH)
