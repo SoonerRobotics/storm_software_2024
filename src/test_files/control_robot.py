@@ -4,7 +4,7 @@ import sys
 import glob
 
 SERVER_IP = "0.0.0.0"
-SERVER_PORT = 12345
+SERVER_PORT = 8000
 
 def start():
 
