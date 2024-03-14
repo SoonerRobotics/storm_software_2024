@@ -22,6 +22,7 @@ def start():
         vid = cv2.VideoCapture(0)
         ret, frame = vid.read()
         vid.release()
+        frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
         encoded, buff = cv2.imencode('.jpg',frame,[cv2.IMWRITE_JPEG_QUALITY,80])
         message = base64.b64encode(buff)
         video_sock.sendto(message,socket_address)
