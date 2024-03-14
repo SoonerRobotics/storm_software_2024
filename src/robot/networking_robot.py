@@ -48,6 +48,5 @@ def video_stream(sock):
                     pass
             cnt+=1
 
-
 if __name__ == "__main__":
     start()

@@ -1,6 +1,6 @@
 # Networking Node #
-
 # This is client code to receive video frames over UDP
+
 import cv2, imutils, socket
 import numpy as np
 import time
@@ -12,7 +12,7 @@ BUFF_SIZE = 65536
 
 def start():
 	
-    operator_socket = socket.socket(socket.AF_INET, socket.sock_DGRAM)
+    operator_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     operator_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
     host_name = socket.gethostname()
     socket_address = ('', UDP_PORT)
@@ -37,7 +37,6 @@ def start():
                 except:
                       pass
           cnt += 1      
-
 
 if __name__ == "__main__":
 	start()
