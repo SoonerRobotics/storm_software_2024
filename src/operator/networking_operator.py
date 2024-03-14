@@ -7,14 +7,14 @@ import time
 import base64
 
 UDP_IP = '192.168.1.130'
-UDP_PORT = 9999
+UDP_PORT = 7000
 BUFF_SIZE = 65536
 
 def start():
 	
     video_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     video_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
-    socket_address = ('',UDP_PORT)
+    socket_address = (UDP_IP,UDP_PORT)
     video_sock.bind(socket_address)   
 
     while True:
