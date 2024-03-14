@@ -7,8 +7,8 @@ import struct
 LEFT = 0
 RIGHT = 1
 
-SERVER_IP = "raspberrypi"
-SERVER_PORT = 12345
+SERVER_IP = "192.168.1.126"
+SERVER_PORT = 8000
 
 def start():
 

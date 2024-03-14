@@ -25,6 +25,7 @@ def start():
     while True:
 
         data, address = server_socket.recvfrom(1024)
+        print("Received: ", data)
         pico.write(data)
 
 
