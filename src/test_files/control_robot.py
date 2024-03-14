@@ -9,7 +9,7 @@ SERVER_PORT = 12345
 def start():
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_socket.bind((SERVER_IP, SERVER_PORT))
+    server_socket.bind(('', SERVER_PORT))
 
     list_of_ports = serial_ports()
     print("Please choose a connection port:")

@@ -16,7 +16,7 @@ def start():
     pygame.joystick.init()
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_socket.bind((SERVER_IP, SERVER_PORT))
+    server_socket.bind(('', SERVER_PORT))
 
     num_joysticks = pygame.joystick.get_count()
     if num_joysticks > 0:
