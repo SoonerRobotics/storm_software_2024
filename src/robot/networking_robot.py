@@ -10,11 +10,13 @@ BUFF_SIZE = 65536
 UDP_PORT = 7000
 
 def start():
+    
     video_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     video_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
-    socket_address = (UDP_IP, UDP_PORT)
-    video_sock.bind(socket_address)
-    vid = cv2.VideoCapture(cv2.CAP_DSHOW)
+    video_sock.bind(('', UDP_PORT))
+    vid = cv2.VideoCapture(0)
+    vid.set(3,640)
+    vid.set(4,480)
     if not vid.isOpened():
         print("Error: Failed to open camera")
         return
@@ -28,11 +30,10 @@ def start():
         frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
         encoded, buff = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 80])
         message = base64.b64encode(buff)
-        video_sock.sendto(message, socket_address)
+        video_sock.sendto(message, (UDP_IP, UDP_PORT))
 
     vid.release()
     cv2.destroyAllWindows()
-    video_sock.close()
 
 if __name__ == "__main__":
     start()

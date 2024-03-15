@@ -27,4 +27,5 @@ def start():
             break
 
 if __name__ == "__main__":
-	start()
+  start()
+  cv2.destroyAllWindows()
