@@ -19,6 +19,7 @@ def start():
       packet, _ = video_sock.recvfrom(BUFF_SIZE)
       data = base64.b64decode(packet)
       frame = cv2.imdecode(np.frombuffer(data, dtype=np.uint8), cv2.IMREAD_COLOR)
+      frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
       cv2.namedWindow("Robot Feed", cv2.WINDOW_NORMAL)
       cv2.resizeWindow("Robot Feed", 1280, 720)
       cv2.imshow("Robot Feed", frame)
