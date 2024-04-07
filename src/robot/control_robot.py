@@ -7,10 +7,8 @@ SERVER_IP = "192.168.1.130"
 SERVER_PORT = 8000
 
 def start():
-
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind(('', SERVER_PORT))
-
     list_of_ports = serial_ports()
     print("Please choose a connection port:")
     port_range = range(len(list_of_ports))
@@ -21,13 +19,10 @@ def start():
         sys.exit(0)
     selected_port = list_of_ports[int(selection)-1]
     pico = serial.Serial(port=selected_port, baudrate=112500)
-
     while True:
-
         data, address = server_socket.recvfrom(1024)
         print("Received: ", data)
         pico.write(data)
-
 
 def serial_ports():
 

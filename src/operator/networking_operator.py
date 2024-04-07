@@ -10,11 +10,9 @@ UDP_PORT = 7000
 BUFF_SIZE = 65536
 
 def start():
-	
     video_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     video_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
     video_sock.bind(('', UDP_PORT))
-
     while True:
       packet, _ = video_sock.recvfrom(BUFF_SIZE)
       data = base64.b64decode(packet)
