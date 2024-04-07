@@ -3,7 +3,7 @@ import serial
 import sys
 import glob
 
-SERVER_IP = "0.0.0.0"
+SERVER_IP = "192.168.1.130"
 SERVER_PORT = 8000
 
 def start():

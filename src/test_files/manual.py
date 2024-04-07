@@ -6,14 +6,15 @@ import sys
 import glob
 import struct
 
-LEFT = 0
-RIGHT = 1
+MOTORS = 0
+ARM = 1
 
 def start():
 
     pygame.init()
     pygame.joystick.init()
 
+    '''
     list_of_ports = serial_ports()
     print("Please choose a connection port:")
     port_range = range(len(list_of_ports))
@@ -24,9 +25,9 @@ def start():
         sys.exit(0)
     selected_port = list_of_ports[int(selection)-1]
     pico = serial.Serial(port=selected_port, baudrate=112500)
+    '''
 
     num_joysticks = pygame.joystick.get_count()
-
     if num_joysticks > 0:
         controller = pygame.joystick.Joystick(0)
         controller.init()
@@ -43,17 +44,20 @@ def start():
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
                     left_y = -controller.get_axis(1)
-                    packet = LEFT.to_bytes(1,'little')
-                    packet = packet + bytearray(struct.pack("<f",left_y))
-                    pico.write(packet)
+                    left_x = controller.get_axis(0)
+                    packet = MOTORS.to_bytes(1,'little') 
+                    packet = packet + bytearray(struct.pack("<f",left_x)) + bytearray(struct.pack("<f",left_y))
+                    # pico.write(packet)
                 elif event.axis == 3:
                     right_y = -controller.get_axis(3)
-                    packet = RIGHT.to_bytes(1,'little')
-                    packet = packet + bytearray(struct.pack("<f",right_y))
-                    pico.write(packet)
+                    right_x = controller.get_axis(2)
+                    packet = ARM.to_bytes(1,'little')
+                    packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
+                    # pico.write(packet)
 
     pygame.quit()
 
+'''
 def serial_ports():
 
     ports = ["-----"]
@@ -74,7 +78,7 @@ def serial_ports():
         except (OSError, serial.SerialException):
             pass
     return result
-
+'''
 
 if __name__ == "__main__":
     start()

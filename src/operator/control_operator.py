@@ -4,8 +4,8 @@ import sys
 import glob
 import struct
 
-LEFT = 0
-RIGHT = 1
+MOTORS = 0
+ARM = 1
 
 SERVER_IP = "192.168.1.126"
 SERVER_PORT = 8000
@@ -35,13 +35,15 @@ def start():
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
                     left_y = -controller.get_axis(1)
-                    packet = LEFT.to_bytes(1,'little')
-                    packet = packet + bytearray(struct.pack("<f",left_y))
+                    left_x = controller.get_axis(0)
+                    packet = MOTORS.to_bytes(1,'little') 
+                    packet = packet + bytearray(struct.pack("<f",left_x)) + bytearray(struct.pack("<f",left_y))
                     server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
                 elif event.axis == 2:
                     right_y = -controller.get_axis(3)
-                    packet = RIGHT.to_bytes(1,'little')
-                    packet = packet + bytearray(struct.pack("<f",right_y))
+                    right_x = controller.get_axis(2)
+                    packet = ARM.to_bytes(1,'little')
+                    packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
                     server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
     
     pygame.quit()
