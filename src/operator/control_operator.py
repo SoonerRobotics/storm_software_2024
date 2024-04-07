@@ -50,7 +50,7 @@ def start():
                     angle = rad * 180 / math.pi
                     tcoeff = -1 + (angle/90) * 2
                     turn = tcoeff * math.fabs(math.fabs(left_y) - math.fabs(left_x))
-                    turn = round(turn*100,0) / 100
+                    turn = round(turn * 100, 0) / 100
                     mov = max(math.fabs(left_y), math.fabs(left_x))
                     if (left_x >= 0 and left_y>=0) or (left_x < 0 and left_y < 0):
                         rawLeft = mov
