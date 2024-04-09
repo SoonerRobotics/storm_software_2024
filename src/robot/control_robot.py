@@ -18,7 +18,7 @@ def start():
     if selection == 'q' or selection == 'Q':
         sys.exit(0)
     selected_port = list_of_ports[int(selection)-1]
-    pico = serial.Serial(port=selected_port, baudrate=112500)
+    pico = serial.Serial(port=selected_port, baudrate=115200)
     while True:
         data, address = server_socket.recvfrom(1024)
         print("Received: ", data)

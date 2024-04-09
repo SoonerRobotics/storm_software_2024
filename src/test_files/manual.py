@@ -22,7 +22,6 @@ def start():
     pygame.init()
     pygame.joystick.init()
 
-    '''
     list_of_ports = serial_ports()
     print("Please choose a connection port:")
     port_range = range(len(list_of_ports))
@@ -33,7 +32,7 @@ def start():
         sys.exit(0)
     selected_port = list_of_ports[int(selection)-1]
     pico = serial.Serial(port=selected_port, baudrate=112500)
-    '''
+    
 
     num_joysticks = pygame.joystick.get_count()
     if num_joysticks > 0:
@@ -52,39 +51,17 @@ def start():
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
                     left_y = -controller.get_axis(1)
-                    left_x = controller.get_axis(0)
-                    z = math.sqrt(left_x * left_x + left_y * left_y)
-                    rad = math.acos(math.fabs(left_x)/z)
-                    angle = rad * 180 / math.pi
-                    tcoeff = -1 + (angle/90) * 2
-                    turn = tcoeff * math.fabs(math.fabs(left_y) - math.fabs(left_x))
-                    turn = round(turn*100,0) / 100
-                    mov = max(math.fabs(left_y), math.fabs(left_x))
-                    if (left_x >= 0 and left_y>=0) or (left_x < 0 and left_y < 0):
-                        rawLeft = mov
-                        rawRight = turn
-                    else:
-                        rawRight = mov
-                        rawLeft = turn
-                    if left_y < 0:
-                        rawLeft = 0 - rawLeft
-                        rawRight = 0 - rawRight
-                    rightOut = map(rawRight)
-                    leftOut = map(rawLeft)
-                    print(rightOut, leftOut)
                     packet = MOTORS.to_bytes(1,'little') 
-                    packet = packet + bytearray(struct.pack("<f",rawRight)) + bytearray(struct.pack("<f",rawLeft))
+                    packet = packet + bytearray(struct.pack("<f",left_y))
                     # pico.write(packet)
                 elif event.axis == 3:
                     right_y = -controller.get_axis(3)
-                    right_x = controller.get_axis(2)
                     packet = ARM.to_bytes(1,'little')
-                    packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
+                    packet = packet + bytearray(struct.pack("<f",right_y))
                     # pico.write(packet)
 
     pygame.quit()
 
-'''
 def serial_ports():
 
     ports = ["-----"]
@@ -105,7 +82,6 @@ def serial_ports():
         except (OSError, serial.SerialException):
             pass
     return result
-'''
 
 if __name__ == "__main__":
     start()
