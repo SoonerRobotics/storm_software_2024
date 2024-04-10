@@ -39,6 +39,7 @@ def start():
                     right_x = controller.get_axis(2)
                     packet = ARM.to_bytes(1,'little')
                     packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
+                    print(right_x, right_y)
                 elif event.axis == 4:
                     left_trig = controller.get_axis(4)
                     left_trig = -((left_trig + 1) / 2)
