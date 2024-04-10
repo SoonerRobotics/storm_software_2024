@@ -4,7 +4,6 @@
 import socket
 import cv2
 import base64
-import apriltag
 
 UDP_IP = "192.168.1.130"
 BUFF_SIZE = 65536
@@ -35,6 +34,8 @@ def start():
 
     vid.release()
     cv2.destroyAllWindows()
+
+
 
 if __name__ == "__main__":
     start()
