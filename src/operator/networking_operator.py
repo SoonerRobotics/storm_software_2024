@@ -54,7 +54,7 @@ def start():
           break
       debug_image = draw_tags(debug_image, tags)
       cv.namedWindow("Robot Feed", cv.WINDOW_NORMAL)
-      cv.resizeWindow("Robot Feed", 1280, 720)
+      cv.resizeWindow("Robot Feed", 1920, 1080)
       cv.imshow("Robot Feed", debug_image)
       key = cv.waitKey(1) & 0xFF
       if key == ord('q'):
@@ -97,8 +97,6 @@ def draw_tags(
                 (corner_01[0], corner_01[1]), (0, 255, 0), 2)
         cv.putText(image, str(tag_id), (center[0] - 10, center[1] - 10),
                    cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv.LINE_AA)
-        
-
     return image
 
 if __name__ == "__main__":
