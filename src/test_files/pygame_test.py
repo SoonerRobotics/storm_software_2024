@@ -28,20 +28,20 @@ def start():
                 running = False
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
-                    right_stick = controller.get_axis(0)
+                    right_stick = -controller.get_axis(0)
                     right_motor = right_stick
-                    left_motor = -controller.get_axis(0)
+                    left_motor = controller.get_axis(0)
                     packet = MOTORS.to_bytes(1,'little')
                     packet = packet + bytearray(struct.pack("<f",right_motor)) + bytearray(struct.pack("<f",left_motor))
-                    
+                    print(left_motor, right_motor)
                 elif event.axis == 2:
                     right_y = -controller.get_axis(3)
                     right_x = controller.get_axis(2)
                     packet = ARM.to_bytes(1,'little')
                     packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
                 elif event.axis == 4:
-                    left_trig = -controller.get_axis(4)
-                    left_trig = (left_trig + 1) / 2
+                    left_trig = controller.get_axis(4)
+                    left_trig = -((left_trig + 1) / 2)
                     right_motor = left_trig
                     left_motor = left_trig
                     print(left_motor, right_motor)

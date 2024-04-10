@@ -35,9 +35,9 @@ def start():
                 running = False
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
-                    right_stick = controller.get_axis(0)
+                    right_stick = -controller.get_axis(0)
                     right_motor = right_stick * 255
-                    left_motor = -controller.get_axis(0) * 255
+                    left_motor = controller.get_axis(0) * 255
                     packet = MOTORS.to_bytes(1,'little')
                     packet = packet + bytearray(struct.pack("<f",right_motor)) + bytearray(struct.pack("<f",left_motor))
                     server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
@@ -50,8 +50,8 @@ def start():
                     server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
                     '''
                 elif event.axis == 4:
-                    left_trig = -controller.get_axis(4)
-                    left_trig = (left_trig + 1) / 2
+                    left_trig = controller.get_axis(4)
+                    left_trig = -((left_trig + 1) / 2)
                     right_motor = left_trig * 255
                     left_motor = left_trig * 255
                     packet = MOTORS.to_bytes(1,'little')
@@ -64,7 +64,7 @@ def start():
                     left_motor = right_trig * 255
                     packet = MOTORS.to_bytes(1,"little")
                     packet = packet + bytearray(struct.pack("<f",right_motor)) + bytearray(struct.pack("<f",left_motor))
-                    server_socket.sendto(packet (SERVER_IP, SERVER_PORT))
+                    server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
 
     
     pygame.quit()
