@@ -13,7 +13,7 @@ UDP_PORT = 7000
 BUFF_SIZE = 65536
 
 def start():
-    
+
     args = get_args()
     families = args.families
     nthreads = args.nthreads
