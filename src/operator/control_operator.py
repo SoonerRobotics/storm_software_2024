@@ -7,11 +7,14 @@ import math
 
 MOTORS = 0
 ARM = 1
+MAGNET_ON = 2
+MAGNET_OFF = 3
 
 SERVER_IP = "192.168.1.126"
 SERVER_PORT = 8000
 
 SPEED_PERCENTAGE = 0.75
+TURN_PERCENTAGE = 1.0
 
 def start():
 
@@ -20,6 +23,7 @@ def start():
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_socket.bind(('', SERVER_PORT))
+    magnet_press = 0
 
     num_joysticks = pygame.joystick.get_count()
     if num_joysticks > 0:
@@ -68,9 +72,22 @@ def start():
                     packet = MOTORS.to_bytes(1,"little")
                     packet = packet + bytearray(struct.pack("<f",right_motor)) + bytearray(struct.pack("<f",left_motor))
                     server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
+            elif event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 0:
+                    if magnet_press == 0:
+                        packet = MAGNET_ON.to_bytes(1,"little")
+                        packet = packet + bytearray(struct.pack("<f",0)) + bytearray(struct.pack("<f",0))
+                        server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
+                        magnet_press = magnet_press + 1
+                    elif magnet_press == 1:
+                        packet = MAGNET_OFF.to_bytes(1,"little")
+                        packet = packet + bytearray(struct.pack("<f",0)) + bytearray(struct.pack("<f",0))
+                        server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
+                        magnet_press = 0
 
     
     pygame.quit()
 
 if __name__ == "__main__":
+
     start()

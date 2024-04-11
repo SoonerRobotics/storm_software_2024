@@ -6,11 +6,13 @@ import struct
 
 ARM = 1
 MOTORS = 0
+MAGNET_ON = 0
 
 def start():
 
     pygame.init()
     pygame.joystick.init()
+    magnet_press = 0
 
     num_joysticks = pygame.joystick.get_count()
     if num_joysticks > 0:
@@ -52,6 +54,14 @@ def start():
                     right_motor = right_trig
                     left_motor = right_trig
                     print(left_motor, right_motor)
+            elif event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 0:
+                    if magnet_press == 0:
+                        print("Magnet on")
+                        magnet_press = 1
+                    elif magnet_press == 1:
+                        print("Magnet off")
+                        magnet_press = 0
     
     pygame.quit()
 
