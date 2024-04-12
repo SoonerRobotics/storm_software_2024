@@ -41,21 +41,20 @@ def start():
                 running = False
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
-                    left_stick = -controller.get_axis(0)
-                    if (left_stick > -0.25 and left_stick < 0.25):
-                        continue
-                    else:
-                        right_motor = (left_stick * 255)
+                    if (abs(controller.get_axis(0)) > 0.25):
+                        right_motor = (-controller.get_axis(0) * 255)
                         left_motor = (controller.get_axis(0) * 255)
                         packet = MOTORS.to_bytes(1,'little')
                         packet = packet + bytearray(struct.pack("<f",right_motor)) + bytearray(struct.pack("<f",left_motor))
                         server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
                 elif event.axis == 2:
-                    right_y = (-controller.get_axis(3)) * SPEED_PERCENTAGE
-                    right_x = controller.get_axis(2) * SPEED_PERCENTAGE
-                    packet = ARM.to_bytes(1,'little')
-                    packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
-                    server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
+                    if (abs(controller.get_axis(3)) > 0.25 and abs(controller.get_axis(2)) > 0.25):
+                        right_y = (-controller.get_axis(3)) * 255
+                        right_x = controller.get_axis(2) * 255
+                        print(right_x, right_y)
+                        packet = ARM.to_bytes(1,'little')
+                        packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
+                        server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
                 elif event.axis == 4:
                     left_trig = controller.get_axis(4)
                     left_trig = -((left_trig + 1) / 2)
@@ -81,10 +80,9 @@ def start():
                         magnet_press = magnet_press + 1
                     elif magnet_press == 1:
                         packet = MAGNET_OFF.to_bytes(1,"little")
-                        packet = packet + bytearray(struct.pack("<f",0)) + bytearray(struct.pack("<f",0))
+                        packet = packet + bytearray(struct.pack("<f",0.0)) + bytearray(struct.pack("<f",0.0))
                         server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
                         magnet_press = 0
-
     
     pygame.quit()
 

@@ -37,11 +37,12 @@ def start():
                     packet = packet + bytearray(struct.pack("<f",right_motor)) + bytearray(struct.pack("<f",left_motor))
                     print(left_motor, right_motor)
                 elif event.axis == 2:
-                    right_y = -controller.get_axis(3)
-                    right_x = controller.get_axis(2)
-                    packet = ARM.to_bytes(1,'little')
-                    packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
-                    print(right_x, right_y)
+                    if (abs(controller.get_axis(3) > 0.25) and abs(controller.get_axis(2)) > 0.25):
+                        right_y = -controller.get_axis(3)
+                        right_x = controller.get_axis(2)
+                        packet = ARM.to_bytes(1,'little')
+                        packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
+                        print(right_x, right_y)
                 elif event.axis == 4:
                     left_trig = controller.get_axis(4)
                     left_trig = -((left_trig + 1) / 2)
