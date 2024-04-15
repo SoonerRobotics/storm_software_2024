@@ -49,9 +49,6 @@ def start():
           camera_params=None,
           tag_size=None,
       )
-      key = cv.waitKey(1)
-      if key == 27: 
-          break
       debug_image = draw_tags(debug_image, tags)
       cv.namedWindow("Robot Feed", cv.WINDOW_NORMAL)
       cv.resizeWindow("Robot Feed", 1920, 1080)

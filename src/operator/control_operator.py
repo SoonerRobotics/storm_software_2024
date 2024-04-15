@@ -1,20 +1,18 @@
 import socket 
 import pygame
-import sys
-import glob
 import struct
-import math
+import time
 
 MOTORS = 0
 ARM = 1
 MAGNET_ON = 2
 MAGNET_OFF = 3
 
-SERVER_IP = "192.168.1.126"
+SERVER_IP = "10.10.1.36"
 SERVER_PORT = 8000
 
 SPEED_PERCENTAGE = 0.75
-TURN_PERCENTAGE = 1.0
+TURN_PERCENTAGE = 0.95
 
 def start():
 
@@ -42,19 +40,21 @@ def start():
             elif event.type == pygame.JOYAXISMOTION:
                 if event.axis == 1:
                     if (abs(controller.get_axis(0)) > 0.25):
-                        right_motor = (-controller.get_axis(0) * 255)
-                        left_motor = (controller.get_axis(0) * 255)
+                        right_motor = (-controller.get_axis(0) * 255) * TURN_PERCENTAGE
+                        left_motor = (controller.get_axis(0) * 255) * TURN_PERCENTAGE
                         packet = MOTORS.to_bytes(1,'little')
                         packet = packet + bytearray(struct.pack("<f",right_motor)) + bytearray(struct.pack("<f",left_motor))
                         server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
-                elif event.axis == 2:
-                    if (abs(controller.get_axis(3)) > 0.25 and abs(controller.get_axis(2)) > 0.25):
-                        right_y = (-controller.get_axis(3)) * 255
-                        right_x = controller.get_axis(2) * 255
-                        print(right_x, right_y)
-                        packet = ARM.to_bytes(1,'little')
-                        packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
+                    else:
+                        packet = MOTORS.to_bytes(1, "little")
+                        packet = packet + bytearray(struct.pack("<f",0.0)) + bytearray(struct.pack("<f", 0.0))
                         server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
+                elif event.axis == 2:
+                    right_y = (-controller.get_axis(3)) * 255
+                    right_x = controller.get_axis(2) * 255
+                    packet = ARM.to_bytes(1,'little')
+                    packet = packet + bytearray(struct.pack("<f",right_x)) + bytearray(struct.pack("<f",right_y))
+                    server_socket.sendto(packet, (SERVER_IP, SERVER_PORT))
                 elif event.axis == 4:
                     left_trig = controller.get_axis(4)
                     left_trig = -((left_trig + 1) / 2)
